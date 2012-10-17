@@ -32,6 +32,23 @@ ERL_NIF_INIT(sha3, nif_funcs, load, NULL, NULL, NULL);
 
 static char *hash_return_strings[] = {"success", "fail", "bad_hashlen"};
 
+int valid_length(int bits, int bufbytes)
+{
+    int numbytes = bits / 8;
+
+    if (bits % 8 > 0)
+    {
+        numbytes++;
+    }
+
+    if (numbytes <= bufbytes)
+    {
+        return 0;
+    }
+
+    return -1;
+}
+
 int load(ErlNifEnv* env, void ** priv_data, ERL_NIF_TERM load_info)
 {
   keccak_hashstate = enif_open_resource_type_compat(env, "hashstate", NULL, ERL_NIF_RT_CREATE, NULL);
@@ -84,8 +101,14 @@ ERL_NIF_TERM keccak_update(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
     if(!enif_get_int(env, argv[2], &bitlength))
         return enif_make_badarg(env);
 
+    if (valid_length(bitlength, bin.size) < 0)
+    {
+        return enif_make_tuple2(env, enif_make_atom(env, "error"), enif_make_atom(env, "invalid_length"));
+    }
+
     HashReturn r = Update(state, (BitSequence *)(bin.data), bitlength);
-    if (r == SUCCESS) {
+    if (r == SUCCESS)
+    {
         return enif_make_tuple2(env, enif_make_atom(env, "ok"), enif_make_resource(env, state));
     } else {
         return enif_make_tuple2(env, enif_make_atom(env, "error"), enif_make_atom(env, hash_return_strings[r]));
@@ -120,6 +143,11 @@ ERL_NIF_TERM keccak_hash(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
     int bitlength = 0;
     if(!enif_get_int(env, argv[2], &bitlength))
         return enif_make_badarg(env);
+
+    if (valid_length(bitlength, bin.size) < 0)
+    {
+        return enif_make_tuple2(env, enif_make_atom(env, "error"), enif_make_atom(env, "invalid_length"));
+    }
 
     HashReturn r = Hash(bits, (BitSequence *)(bin.data), bitlength, (BitSequence *)out.data);
     if (r == SUCCESS) {
