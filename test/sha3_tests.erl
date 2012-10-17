@@ -2,15 +2,22 @@
 
 -include_lib("eunit/include/eunit.hrl").
 
+test_hash(Bits, [Len, Msg, Md]) when Len > 0 ->
+    {ok, Digest} = case Len rem 8 of
+        0 -> sha3:hash(Bits, hex:hexstr_to_bin(Msg));
+        _ -> sha3:hash(Bits, hex:hexstr_to_bin(Msg), Len)
+    end,
+    ?assertEqual(Md, string:to_upper(hex:bin_to_hexstr(Digest)));
+
 test_hash(Bits, [Len, Msg, Md]) ->
     {ok, Digest} = sha3:hash(Bits, hex:hexstr_to_bin(Msg), Len),
     ?assertEqual(Md, string:to_upper(hex:bin_to_hexstr(Digest))).
 
 test_lifecycle(Bits, [Len, Msg, Md]) ->
-   {ok, State} = sha3:init(Bits),
-   {ok, UpdateState} = sha3:update(State, hex:hexstr_to_bin(Msg), Len),
-   {ok, Digest} = sha3:final(UpdateState),
-   ?assertEqual(Md, string:to_upper(hex:bin_to_hexstr(Digest))).
+    {ok, State} = sha3:init(Bits),
+    {ok, State} = sha3:update(State, hex:hexstr_to_bin(Msg), Len),
+    {ok, Digest} = sha3:final(State),
+    ?assertEqual(Md, string:to_upper(hex:bin_to_hexstr(Digest))).
 
 parse_triples(Lines) ->
     parse_triples(Lines, []).
