@@ -13,6 +13,14 @@ test_hash(Bits, [Len, Msg, Md]) ->
     {ok, Digest} = sha3:hash(Bits, hex:hexstr_to_bin(Msg), Len),
     ?assertEqual(Md, string:to_upper(hex:bin_to_hexstr(Digest))).
 
+test_lifecycle(Bits, [Len, Msg, Md]) when Len > 8 ->
+    {ok, State} = sha3:init(Bits),
+    <<Bin1:8/bitstring, Bin2/bitstring>> = hex:hexstr_to_bin(Msg),
+    {ok, State} = sha3:update(State, Bin1, 8),
+    {ok, State} = sha3:update(State, Bin2, Len - 8),
+    {ok, Digest} = sha3:final(State),
+    ?assertEqual(Md, string:to_upper(hex:bin_to_hexstr(Digest)));
+
 test_lifecycle(Bits, [Len, Msg, Md]) ->
     {ok, State} = sha3:init(Bits),
     {ok, State} = sha3:update(State, hex:hexstr_to_bin(Msg), Len),
