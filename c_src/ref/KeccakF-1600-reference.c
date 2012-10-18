@@ -12,9 +12,9 @@ http://creativecommons.org/publicdomain/zero/1.0/
 */
 
 #include <string.h>
-#include "brg_endian.h"
-#include "KeccakNISTInterface.h"
-#include "KeccakF-1600-interface.h"
+#include "../brg_endian.h"
+#include "../KeccakNISTInterface.h"
+#include "../KeccakF-1600-interface.h"
 
 typedef unsigned char UINT8;
 typedef unsigned long long int UINT64;
