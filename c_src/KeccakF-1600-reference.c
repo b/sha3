@@ -25,11 +25,11 @@ UINT64 KeccakRoundConstants[nrRounds];
 unsigned int KeccakRhoOffsets[nrLanes];
 
 void KeccakPermutationOnWords(UINT64 *state);
-void theta(UINT64 *A);
-void rho(UINT64 *A);
-void pifun(UINT64 *A);
-void chi(UINT64 *A);
-void iota(UINT64 *A, unsigned int indexRound);
+void keccak_theta(UINT64 *A);
+void keccak_rho(UINT64 *A);
+void keccak_pi(UINT64 *A);
+void keccak_chi(UINT64 *A);
+void keccak_iota(UINT64 *A, unsigned int indexRound);
 
 void fromBytesToWords(UINT64 *stateAsWords, const unsigned char *state)
 {
@@ -80,18 +80,18 @@ void KeccakPermutationOnWords(UINT64 *state)
     unsigned int i;
 
     for(i=0; i<nrRounds; i++) {
-        theta(state);
-        rho(state);
-        pifun(state);
-        chi(state);
-        iota(state, i);
+        keccak_theta(state);
+        keccak_rho(state);
+        keccak_pi(state);
+        keccak_chi(state);
+        keccak_iota(state, i);
     }
 }
 
 #define index(x, y) (((x)%5)+5*((y)%5))
 #define ROL64(a, offset) ((offset != 0) ? ((((UINT64)a) << offset) ^ (((UINT64)a) >> (64-offset))) : a)
 
-void theta(UINT64 *A)
+void keccak_theta(UINT64 *A)
 {
     unsigned int x, y;
     UINT64 C[5], D[5];
@@ -108,7 +108,7 @@ void theta(UINT64 *A)
             A[index(x, y)] ^= D[x];
 }
 
-void rho(UINT64 *A)
+void keccak_rho(UINT64 *A)
 {
     unsigned int x, y;
 
@@ -116,7 +116,7 @@ void rho(UINT64 *A)
         A[index(x, y)] = ROL64(A[index(x, y)], KeccakRhoOffsets[index(x, y)]);
 }
 
-void pifun(UINT64 *A) // Renamed to pifun because pi() seemed to be shadowed
+void keccak_pi(UINT64 *A)
 {
     unsigned int x, y;
     UINT64 tempA[25];
@@ -129,7 +129,7 @@ void pifun(UINT64 *A) // Renamed to pifun because pi() seemed to be shadowed
             A[index(0*x+1*y, 2*x+3*y)] = tempA[index(x, y)];
 }
 
-void chi(UINT64 *A)
+void keccak_chi(UINT64 *A)
 {
     unsigned int x, y;
     UINT64 C[5];
@@ -142,7 +142,7 @@ void chi(UINT64 *A)
     }
 }
 
-void iota(UINT64 *A, unsigned int indexRound)
+void keccak_iota(UINT64 *A, unsigned int indexRound)
 {
     A[index(0, 0)] ^= KeccakRoundConstants[indexRound];
 }
