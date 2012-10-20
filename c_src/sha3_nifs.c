@@ -85,7 +85,7 @@ ERL_NIF_TERM keccak_init(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
         return enif_make_tuple2(env, enif_make_atom(env, "ok"), hash_state_term);
     } else {
         enif_release_resource_compat(env, state);
-        return enif_make_tuple2(env, enif_make_atom(env, "error"), enif_make_atom(env, "fail"));
+        return enif_make_tuple2(env, enif_make_atom(env, "error"), enif_make_atom(env, hash_return_strings[r]));
     }
 }
 
