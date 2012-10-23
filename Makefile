@@ -1,5 +1,8 @@
 all:
-	./rebar compile
+	./rebar -v compile
 
 clean:
-	./rebar clean
+	./rebar -v clean
+
+eunit:
+	./rebar -v eunit
