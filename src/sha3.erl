@@ -40,10 +40,10 @@ update(_State, _Data, _BitLength) ->
 -spec final(binary()) -> {ok, binary()} | {error, atom()}.
 final(_State) ->
     "NIF library not loaded".
-    
+
 hexhash(Bits, Data) ->
   {ok, Hash} = hash(Bits, Data, bit_size(Data)),
-  list_to_binary(hex:bin_to_hexstr(Hash)).
+  list_to_binary(hex2bin:bin_to_hexstr(Hash)).
 
 -spec hash(non_neg_integer(), binary()) -> {ok, binary()} | {error, atom()}.
 hash(Bits, Data) -> hash(Bits, Data, bit_size(Data)).

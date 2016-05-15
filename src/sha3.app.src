@@ -4,12 +4,24 @@
   {vsn, "1.0.0"},
   {modules, [
              sha3,
-             hex
+             hex2bin
             ]},
+  {files, [
+           "Makefile",
+           "src",
+           "c_src",
+           "rebar*",
+           "README.md"
+          ]},
   {registered, []},
   {applications, [
                   kernel,
                   stdlib
                  ]},
+  {maintainers, [
+                 "Benjamin Black"
+                ]},
+  {licenses, ["Apache"]},
+  {links, [{"Github", "https://github.com/aesedepece/sha3"}]},
   {env, []}
  ]}.
