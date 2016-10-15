@@ -1,10 +1,10 @@
 all:
-	./rebar -v get-deps
-	./rebar -v compile
+	./rebar3 -v get-deps
+	./rebar3 -v compile
 
 clean:
-	./rebar -v delete-deps
-	./rebar -v clean
+	./rebar3 -v delete-deps
+	./rebar3 -v clean
 
 eunit:
-	./rebar -v eunit
+	./rebar3 -v eunit

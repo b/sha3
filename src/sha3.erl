@@ -14,9 +14,9 @@
 init() ->
     case code:priv_dir(sha3) of
         {error, bad_name} ->
-            SoName = filename:join("../priv", "sha3_nifs");
+            SoName = filename:join("../priv", "sha3");
         Dir ->
-            SoName = filename:join(Dir, "sha3_nifs")
+            SoName = filename:join(Dir, "sha3")
     end,
     case erlang:load_nif(SoName, 0) of
         ok -> ok;
