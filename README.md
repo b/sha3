@@ -1,6 +1,6 @@
-### sha3
+### keccak
 
-sha3 is a NIF wrapper around SHA-3/KECCAK cryptographic hashing function
+keccak is a NIF wrapper around SHA-3/KECCAK cryptographic hashing function
 
 ### Quick Start
 
@@ -59,4 +59,3 @@ Alternatively, you might want to incrementally hash a longer message:
 The underlying hashing code in sha3 is the reference implementation of KECCAK, now SHA-3, from the official NIST submission.
 
 Details on the algorithm as submitted and known analysis can be found at http://keccak.noekeon.org/.
-

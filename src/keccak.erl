@@ -1,4 +1,4 @@
--module(sha3).
+-module(keccak).
 -author('b@b3k.us').
 
 -export([init/1,
@@ -12,11 +12,11 @@
 -on_load(init/0).
 
 init() ->
-    case code:priv_dir(sha3) of
+    case code:priv_dir(keccak) of
         {error, bad_name} ->
-            SoName = filename:join("../priv", "sha3");
+            SoName = filename:join("../priv", "keccak");
         Dir ->
-            SoName = filename:join(Dir, "sha3")
+            SoName = filename:join(Dir, "keccak")
     end,
     case erlang:load_nif(SoName, 0) of
         ok -> ok;
