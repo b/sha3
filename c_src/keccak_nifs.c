@@ -28,7 +28,7 @@ static ErlNifFunc nif_funcs[] =
     {"hash", 3, keccak_hash}
 };
 
-ERL_NIF_INIT(sha3, nif_funcs, load, NULL, NULL, NULL);
+ERL_NIF_INIT(keccak, nif_funcs, load, NULL, NULL, NULL);
 
 static char *hash_return_strings[] = {"success", "fail", "bad_hashlen"};
 
@@ -71,12 +71,12 @@ void unload(ErlNifEnv* env, void* priv)
 }
 
 ERL_NIF_TERM keccak_init(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
-{   
+{
   ERL_NIF_TERM hash_state_term;
     int bits = 0;
     if(!enif_get_int(env, argv[0], &bits))
         return enif_make_badarg(env);
-    
+
     hashState *state = (hashState*) enif_alloc_resource_compat(env, keccak_hashstate, sizeof(hashState));
     HashReturn r = Init(state, bits);
     if (r == SUCCESS) {
@@ -96,7 +96,7 @@ ERL_NIF_TERM keccak_update(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
 
     ErlNifBinary bin;
     enif_inspect_binary(env, argv[1], &bin);
-    
+
     int bitlength = 0;
     if(!enif_get_int(env, argv[2], &bitlength))
         return enif_make_badarg(env);
@@ -119,7 +119,7 @@ ERL_NIF_TERM keccak_final(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
 {
     hashState *state = NULL;
     enif_get_resource(env, argv[0], keccak_hashstate, (void**)&state);
-    
+
     ErlNifBinary out;
     enif_alloc_binary_compat(env, (size_t)(state->fixedOutputLength/8), &out);
 
@@ -135,11 +135,11 @@ ERL_NIF_TERM keccak_hash(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
 {
     int bits = 0;
     enif_get_int(env, argv[0], &bits);
-    
+
     ErlNifBinary bin, out;
     enif_inspect_binary(env, argv[1], &bin);
     enif_alloc_binary_compat(env, (size_t)(bits/8), &out);
-    
+
     int bitlength = 0;
     if(!enif_get_int(env, argv[2], &bitlength))
         return enif_make_badarg(env);
@@ -154,5 +154,5 @@ ERL_NIF_TERM keccak_hash(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[])
         return enif_make_tuple2(env, enif_make_atom(env, "ok"), enif_make_binary(env, &out));
     } else {
         return enif_make_tuple2(env, enif_make_atom(env, "error"), enif_make_atom(env, hash_return_strings[r]));
-    }   
+    }
 }

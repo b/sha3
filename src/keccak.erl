@@ -1,4 +1,4 @@
--module(sha3).
+-module(keccak).
 -author('b@b3k.us').
 
 -export([init/1,
@@ -12,11 +12,11 @@
 -on_load(init/0).
 
 init() ->
-    case code:priv_dir(sha3) of
+    case code:priv_dir(keccak) of
         {error, bad_name} ->
-            SoName = filename:join("../priv", "sha3_nifs");
+            SoName = filename:join("../priv", "keccak");
         Dir ->
-            SoName = filename:join(Dir, "sha3_nifs")
+            SoName = filename:join(Dir, "keccak")
     end,
     case erlang:load_nif(SoName, 0) of
         ok -> ok;
@@ -40,10 +40,10 @@ update(_State, _Data, _BitLength) ->
 -spec final(binary()) -> {ok, binary()} | {error, atom()}.
 final(_State) ->
     "NIF library not loaded".
-    
+
 hexhash(Bits, Data) ->
   {ok, Hash} = hash(Bits, Data, bit_size(Data)),
-  list_to_binary(hex:bin_to_hexstr(Hash)).
+  list_to_binary(hex2bin:bin_to_hexstr(Hash)).
 
 -spec hash(non_neg_integer(), binary()) -> {ok, binary()} | {error, atom()}.
 hash(Bits, Data) -> hash(Bits, Data, bit_size(Data)).
