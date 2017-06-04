@@ -2,8 +2,10 @@ all:
 	./rebar3 compile
 
 clean:
-	rm -rf _build
 	./rebar3 clean
+
+clean-deps: clean
+	rm -rf _build
 
 eunit:
 	./rebar3 eunit
