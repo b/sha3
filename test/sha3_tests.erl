@@ -40,7 +40,7 @@ parse_triples([Len, Msg, Md|Lines], Acc) ->
 
 msgkat(Set, Bits, Fun) ->
     {ok, Cwd} = file:get_cwd(),
-    Filename = filename:join([Cwd, "..", "test", "data", Set ++ "MsgKAT.zip"]),
+    Filename = filename:join([Cwd, "test", "data", Set ++ "MsgKAT.zip"]),
     {ok, ZipHandle} = zip:zip_open(Filename, [memory]),
     {ok, {_, Data}} = zip:zip_get(Set ++ "MsgKAT_" ++ integer_to_list(Bits) ++ ".txt", ZipHandle),
     Lines = lists:filter(
